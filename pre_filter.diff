@@ -1,0 +1,103 @@
+185,186c185,186
+<             model_path='./models/ja.arpa.bin',
+<             sp_model_path='./models/ja.sp.model',
+---
+>             model_path=kenlm_model_path,
+>             sp_model_path=sp_model_path,
+220,229d219
+< def get_args():
+<     parser = argparse.ArgumentParser()
+<     parser.add_argument('--start', type=int, default=1)
+<     parser.add_argument('--end', type=int, default=119)
+<     parser.add_argument('--output', type=str)
+<     parser.add_argument('--workers', type=int, default=10)
+<     args = parser.parse_args()
+<     return args
+< 
+< 
+231,243c221,223
+<     args = get_args()
+<     input_dir = './data'
+<     # output_dir = './output'
+<     output_dir = args.output
+<     print('output_dir...', output_dir)
+<     token = os.environ['HF_TOKEN']
+<     start = args.start
+<     end = args.end
+< 
+<     num_jobs = args.workers
+<     print('start...')
+<     print(f'start: {start}')
+<     print(f'end: {end}')
+---
+>     print('start...')
+>     print(f'start: {start_part}')
+>     print(f'end: {end_part}')
+246c226
+<     for i in range(start, end + 1):
+---
+>     for i in range(start_part, end_part + 1):
+255c235
+<                         token=token
+---
+>                         token=args.hf_token
+259c239
+<         show_diff_mem(0, start)
+---
+>         show_diff_mem(0, start_part)
+261c241
+<         show_diff_mem(0.1, start)
+---
+>         show_diff_mem(0.1, start_part)
+268c248
+<         show_diff_mem(8, start)
+---
+>         show_diff_mem(8, start_part)
+272c252,253
+<     clean('./sample2.jsonl', 'sample_output.jsonl')
+---
+>     clean('./data/sample_input.jsonl', './output/sample_output.jsonl')
+> 
+273a255,268
+> def get_args():
+>     parser = argparse.ArgumentParser()
+>     parser.add_argument('--start', type=int, default=1)
+>     parser.add_argument('--end', type=int, default=119)
+>     parser.add_argument('--hf-token', type=str, default='')
+>     parser.add_argument('--input', type=str, default='./data')
+>     parser.add_argument('--output', type=str, default='./output')
+>     parser.add_argument('--ng-word', type=str, default='./ng_word.txt')
+>     parser.add_argument('--kenlm-model', type=str, default='./models/ja.arpa.bin')
+>     parser.add_argument('--sentencepiece-model', type=str, default='./models/ja.sp.model')
+>     parser.add_argument('--workers', type=int, default=10)
+>     parser.add_argument('--sample-run', action='store_true')
+>     args = parser.parse_args()
+>     return args
+274a270
+> 
+276,277c272,293
+<     main()
+<     # test()
+---
+>     args = get_args()
+>     print(args)
+> 
+>     start_part = args.start
+>     end_part = args.end
+>     hf_token = args.hf_token
+>     input_dir = args.input
+>     output_dir = args.output
+>     os.makedirs(output_dir, exist_ok=True)
+>     ng_word_filepath = args.ng_word
+>     kenlm_model_path = args.kenlm_model
+>     sp_model_path = args.sentencepiece_model
+>     num_jobs = args.workers
+> 
+>     if args.sample_run:
+>         test()
+>     else:
+>         if hf_token == '':
+>             print('Please set the Hugging Face token.')
+>             sys.exit(1)
+> 
+>         main()
