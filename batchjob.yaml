@@ -2,14 +2,14 @@ taskGroups:
   - taskSpec:
       runnables:
         - container:
-            imageUri: asia-northeast1-docker.pkg.dev/cyberagent-143/ailab-advent-calendar-2024-batch/batch:latest
+            imageUri: asia-northeast1-docker.pkg.dev/<PROJECT_NAME>/ailab-advent-calendar-2024-batch/batch:latest
             entrypoint: /bin/bash
             commands:
               - -c
               - cd /app && python3 pre_filter.py --input /mnt/disks/gcs-bucket/data --output /mnt/disks/gcs-bucket/output --workers 2 --start ${BATCH_TASK_INDEX} --end ${BATCH_TASK_INDEX} --hf-token ${HF_TOKEN}
           environment:
             secretVariables:
-              HF_TOKEN: projects/cyberagent-143/secrets/hf_token/versions/latest
+              HF_TOKEN: projects/<PROJECT_NAME>/secrets/hf_token/versions/latest
       volumes:
         - gcs:
             remotePath: peinan-resource/advent-calendar-2024
